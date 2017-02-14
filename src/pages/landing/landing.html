@@ -1,0 +1,21 @@
+<ion-header>
+
+  <ion-navbar color="primary-dark">
+    <ion-title>Landing</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <img src="assets/img/todo.png" alt="Todo list image">
+  <button ion-button block color="accent" (click)="goToSignup()">
+    CREATE A NEW TEAM
+  </button>
+  <button ion-button block color="accent" (click)="goToIntro()">
+    MY TEAM INVITED ME
+  </button>
+  <button ion-button clear block color="light" class="login-button" (click)="goToLogin()">
+    I already have an account
+  </button>
+</ion-content>
