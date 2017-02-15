@@ -27,14 +27,18 @@ export class AuthData {
             teamName,
             teamAdmin: newUser.uid,
             teamMembers: {
-              [newUser.uid]: { fullName: fullName }
+              [newUser.uid]: { 
+                fullName: fullName,
+                email: email
+              }
             }
           });
         });
     });
   }
 
-  createMemberAccount(email: string, password: string, teamId: string, fullName: string, teamName){
+  createMemberAccount(email: string, password: string, teamId: string, fullName: string, 
+    teamName: string, inviteId: string): firebase.Promise<any> {
     return firebase.auth().createUserWithEmailAndPassword(email, password).then( newUser => {
       this.userProfile.child(newUser.uid)
         .set({
@@ -45,23 +49,60 @@ export class AuthData {
           teamAdmin: false,
           active: false
         }).then( () => {
-          this.teamProfile.child(teamId).child('teamMembers').child(newUser.uid)
-            .set({ fullName: fullName});
+          this.teamProfile.child(teamId).child('teamMembers').child(newUser.uid).set({
+            fullName: fullName,
+            email: email,
+            inactive: true,
+            inviteId: inviteId
+          });
+        }).then( () => {
+          this.inviteRef.child(inviteId).child('acceptedInvite').set(true);
         });
     });
   }
 
-  getTeamInvite(email: string): firebase.database.Reference {
-    return this.inviteRef.child(email);
+  getTeamInvite(email: string): firebase.Promise<any> {
+    return new Promise( (resolve, reject) => {
+      const invitation: any = [];
+      this.inviteRef.orderByChild('email').equalTo(email).limitToFirst(1)
+      .once('value', inviteSanpshot => {
+        inviteSanpshot.forEach( inviteSnap => {
+          invitation.push({
+            inviteId: inviteSnap.key,
+            email: inviteSnap.val().email,
+            teamId: inviteSnap.val().teamId,
+            fullName: inviteSnap.val().fullName,
+            teamName: inviteSnap.val().teamName
+          });
+          return false
+        });
+        resolve(invitation);
+      });
+    });
+    
   }
 
-  inviteTeamMember(email: string, teamId: string, teamName: string){
-    this.inviteRef.child(email).set({ teamId, teamName });
+  inviteTeamMember(email: string, fullName: string, teamId: string, teamName: string): firebase.Promise<any> {
+    return this.inviteRef.push({
+      email,
+      fullName,
+      teamId, 
+      teamName,
+      acceptedInvite: false
+    });
   }
 
   
-  loginUser(email: string, password: string): firebase.Promise<any> {
-    return firebase.auth().signInWithEmailAndPassword(email, password);
+  loginUser(email: string, password: string): Promise<any> {
+    return new Promise( (resolve, reject) => {
+      firebase.auth().signInWithEmailAndPassword(email, password).then( user => {
+        firebase.database().ref(`/userProfile/${user.uid}`)
+          .once('value', userProfile => {
+            resolve(userProfile.val().active);
+          }); 
+      });
+    });
+    
   }
 
   logoutUser(): firebase.Promise<any> {

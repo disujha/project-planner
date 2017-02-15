@@ -5,6 +5,7 @@ import { Splashscreen } from '@ionic-native/splashscreen';
 
 import { TabsPage } from '../pages/tabs/tabs';
 import { LandingPage } from '../pages/landing/landing';
+import { WaitingPage } from '../pages/waiting/waiting';
 
 import firebase from 'firebase';
 
@@ -31,8 +32,15 @@ export class MyApp {
         if (!user) {
           this.rootPage = LandingPage;
           unsubscribe();
-        } else { 
-          this.rootPage = TabsPage;
+        } else {
+          firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}`)
+          .once('value', userProfile => {
+            if (userProfile.val().active === true){
+              this.rootPage = TabsPage;
+            } else {
+              this.rootPage = WaitingPage;
+            }
+          }); 
           unsubscribe();
         }
       });     

@@ -1,18 +1,83 @@
-<!--
-  Generated template for the Intro page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Intro</ion-title>
+  <ion-navbar color="primary-dark">
+    <ion-title>
+      WELCOME
+    </ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+<ion-slides pager>
 
+  <ion-slide >
+    <h2>Welcome to MyProjectPlanner</h2>
+    <p>
+      Hey, enter your email address below so I can look for your invitation
+    </p>
+    <form [formGroup]="getInvitationForm" (submit)="getInvitation()" novalidate>
+      <ion-item>
+        <ion-label stacked>Email</ion-label>
+        <ion-input formControlName="email" type="email" placeholder="What's your email?'" 
+          [class.invalid]="!getInvitationForm.controls.email.valid && getInvitationForm.controls.email.dirty">
+        </ion-input>
+      </ion-item>
+      <ion-item class="error-message" 
+        *ngIf="!getInvitationForm.controls.email.valid  && getInvitationForm.controls.email.dirty">
+        <p>Please write a valid email.</p>
+      </ion-item>
+
+      <button ion-button block type="submit" color="accent" [disabled]="!getInvitationForm.valid">
+        Create an Account
+      </button>
+    </form>
+  </ion-slide>
+
+  <ion-slide>
+    <div *ngIf="!invitation">
+      <h2>Couldn't find it!</h2>
+      <p>
+        Hey, it looks like there isn't an invitation for that email, can you double check with who invited you?
+      </p>
+    </div>
+
+    <div *ngIf="invitation">
+      <h2>Hey, {{ invitation.fullName }}</h2>
+      <p>
+        It looks like there's a pending invitation to you from <span>{{ invitation.teamName }}</span> team.
+      </p>
+      <p>
+        All you need to do is add a password to create your account.
+      </p>
+      <form [formGroup]="signupForm" novalidate>
+        <ion-item>
+          <ion-label stacked>Password</ion-label>
+          <ion-input formControlName="password" type="password" placeholder="Your password" 
+            [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.dirty">
+          </ion-input>
+        </ion-item>
+        <ion-item class="error-message" 
+          *ngIf="!signupForm.controls.password.valid  && signupForm.controls.password.dirty">
+          <p>Your password needs more than 6 characters.</p>
+        </ion-item>
+
+        <button ion-button block type="submit" color="accent" (click)="signupTeamMember()" 
+          [disabled]="!signupForm.valid">
+          Create an Account
+        </button>
+      </form>
+    </div>
+  </ion-slide>
+
+  <ion-slide *ngIf="invitation">
+    <h2>
+      Hey {{ invitation.fullName }},
+    </h2>
+    <p>
+      Your account has been created, as soon as the admin of {{ invitation.teamName }} approves it you'll be able to log into your account.
+    </p>
+  </ion-slide>
+</ion-slides>
 </ion-content>

@@ -1,3 +1,13 @@
 page-login {
+  ion-content { 
+    background-color: #FF5722 !important;
 
+    ion-item {
+      margin: 10px 0 !important;
+    }
+
+    button {
+      margin-top: 30px !important;
+    }
+  }
 }

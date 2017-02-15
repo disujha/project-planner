@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 
 import { HomePage } from '../home/home';
 import { TeamPage } from '../team/team';
-import { ProfilePage } from '../profile/profile';
+
+import { TeamData } from '../../providers/team-data';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -12,8 +13,11 @@ export class TabsPage {
   // should be each tab's root Page
   tab1Root: any = HomePage;
   tab2Root: any = TeamPage;
-  tab3Root: any = ProfilePage;
+  isAdmin: boolean = false;
 
-  constructor() {
+  constructor(public teamData: TeamData) {
+    this.teamData.getAdminStatus().then( adminStatus => {
+      this.isAdmin = adminStatus;
+    });
   }
 }

@@ -1,11 +1,49 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color ="primary-dark">
     <ion-title>
-      TEAM
+      {{ teamProfile?.teamName }}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+
+  <h4>Hey {{ teamProfile?.adminName }},</h4>
+
+  <p>
+    You're the admin of <span>{{ teamProfile?.teamName }}</span> and below you can see your team members or add new members.
+  </p>
+
+  <button ion-button block color="accent" (click)="inviteTeamMember()">
+    Invite a new member
+  </button>
+
+  <ion-list *ngIf="pendingInvitationList">
+    <ion-list-header>
+      Pending Invitations
+    </ion-list-header>
+    <ion-item *ngFor="let invite of pendingInvitationList">
+      {{ invite.fullName }} - {{ invite.email }}
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="pendingRequestList">
+    <ion-list-header>
+      Pending Requests
+    </ion-list-header>
+    <button ion-item *ngFor="let request of pendingRequestList" 
+      (click)="acceptTeamMember(request.userId, request.inviteId, request.fullName)">
+      {{ request.fullName }} - {{ request.email }}
+    </button>
+  </ion-list>
+
+  <ion-list *ngIf="teamProfile">
+    <ion-list-header>
+      Team Members
+    </ion-list-header>
+    <ion-item *ngFor="let member of teamProfile?.teamMembers | objectToArray">
+      {{ member.fullName }}
+    </ion-item>
+  </ion-list>
 
 </ion-content>

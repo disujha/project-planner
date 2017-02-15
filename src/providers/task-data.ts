@@ -1,18 +1,69 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import firebase from 'firebase';
 
-/*
-  Generated class for the TaskData provider.
-
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
 @Injectable()
 export class TaskData {
+  public taskRef: firebase.database.Reference;
+  public userId: string;
+  
+  constructor() {
+    this.userId = firebase.auth().currentUser.uid;
+    firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/teamId`).on('value', teamId => {
+      this.taskRef = firebase.database().ref(`/taskByTeam/${teamId.val()}`);
+    });
+  }
 
-  constructor(public http: Http) {
-    console.log('Hello TaskData Provider');
+  createTask(taskName: string, memberId: string): firebase.Promise<any> {
+    return firebase.database().ref(`/userProfile/${memberId}/`).once('value', profileSnapshot => {
+      this.taskRef.push({
+        taskName,
+        memberId,
+        memberName: profileSnapshot.val().fullName,
+        memberEmail: profileSnapshot.val().email,
+        completed: false
+      });
+    });
+  }
+
+  getTaskList(): Promise <any> {
+    const taskList: Array<any> = [];
+    return new Promise( (resolve, reject) => {
+
+      firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/`)
+      .on('value', profileSnapshot => {
+        
+        firebase.database().ref(`/taskByTeam/${profileSnapshot.val().teamId}`)
+        .on('value', taskListSnapshot => {
+          if (profileSnapshot.val().teamAdmin === true){
+            taskListSnapshot.forEach( taskListSnap => {
+              taskList.push({
+                taskId: taskListSnap.key,
+                taskName: taskListSnap.val().taskName,
+                memberId: taskListSnap.val().memberId,
+                memberName: taskListSnap.val().memberName,
+                memberEmail: taskListSnap.val().memberEmail,
+                completed: taskListSnap.val().completed
+              });
+              return false
+            });
+          } else {
+            taskListSnapshot.forEach( taskListSnap => {
+              if (taskListSnap.val().memberId === this.userId){
+                taskList.push({
+                  taskId: taskListSnap.key,
+                  taskName: taskListSnap.val().taskName,
+                  memberId: taskListSnap.val().memberId,
+                  memberName: taskListSnap.val().memberName,
+                  completed: taskListSnap.val().completed
+                });
+              }
+              return false
+            });
+          }
+          resolve(taskList);
+          });
+        });
+      });
   }
 
 }
