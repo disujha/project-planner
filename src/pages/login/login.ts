@@ -43,5 +43,4 @@ export class LoginPage {
     }
     loading.present();
   }
-
 }

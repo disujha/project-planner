@@ -14,6 +14,7 @@ export class SignupPage {
 
   constructor(public navCtrl: NavController, public authData: AuthData, public formBuilder: FormBuilder, 
     public loadingCtrl: LoadingController) {
+    
     this.createTeamForm = formBuilder.group({
       fullName: ['', Validators.required],
       teamName: ['', Validators.required],
@@ -22,7 +23,7 @@ export class SignupPage {
     });
   }
 
-  createTeam(){
+  createTeam(): void {
     const loading = this.loadingCtrl.create();
     if (!this.createTeamForm.valid){
       console.log(this.createTeamForm.value);
@@ -37,6 +38,4 @@ export class SignupPage {
     }
     loading.present();
   }
-
-
 }

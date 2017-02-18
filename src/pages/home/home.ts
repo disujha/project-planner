@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 import { TeamData } from '../../providers/team-data';
 import { TaskData } from '../../providers/task-data';
 import { TaskCreatePage } from '../task-create/task-create';
@@ -14,7 +14,8 @@ export class HomePage {
   taskList: Array<any> = [];
   userProfile: Object = {};
 
-  constructor(public navCtrl: NavController, public taskData: TaskData, public teamData: TeamData) {}
+  constructor(public navCtrl: NavController, public taskData: TaskData, public teamData: TeamData, 
+    public alertCtrl: AlertController) {}
 
   ionViewDidEnter(): void {
     this.teamData.getAdminStatus().then( adminStatus => {
@@ -32,6 +33,24 @@ export class HomePage {
 
   goToTaskCreate(): void {
     this.navCtrl.push(TaskCreatePage);
+  }
+
+  completeTask(task): void {
+    let confirm = this.alertCtrl.create({
+      title: 'Are you done?',
+      message: 'Hit OK to mark this task as completed.',
+      buttons: [
+        {
+          text: 'OK',
+          handler: () => { 
+            this.taskData.completeTask(task.taskId).then( () => {
+              task.completed = true;
+            });
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
 }

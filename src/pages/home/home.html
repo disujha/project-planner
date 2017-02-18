@@ -11,7 +11,8 @@
 
 <ion-content padding>
   <ion-list *ngIf="isAdmin">
-    <ion-item *ngFor="let task of taskList">
+    <ion-item *ngFor="let task of taskList" (click)="completeTask(task)" 
+      [class.incomplete]="!task.completed" [class.completed]="task.completed">
       <h2>{{ task.taskName }}</h2>
       <h3>Assigned to: {{ task.memberName }}</h3>
       <p>You can reach out at {{ task.memberEmail }}</p>
@@ -22,7 +23,8 @@
     <ion-list-header>
       These are your assigned tasks {{ userProfile?.fullName }}
     </ion-list-header>
-    <ion-item *ngFor="let task of taskList">
+    <ion-item *ngFor="let task of taskList" (click)="completeTask(task)" 
+      [class.incomplete]="!task.completed" [class.completed]="task.completed">
       <h2>{{ task.taskName }}</h2>
       <h3>Assigned to: {{ task.memberName }}</h3>
       <p>You can reach out at {{ task.memberEmail }}</p>

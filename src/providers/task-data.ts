@@ -26,14 +26,15 @@ export class TaskData {
   }
 
   getTaskList(): Promise <any> {
-    const taskList: Array<any> = [];
+    let taskList: Array<any> = [];
     return new Promise( (resolve, reject) => {
 
       firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/`)
-      .on('value', profileSnapshot => {
+      .once('value', profileSnapshot => {
         
         firebase.database().ref(`/taskByTeam/${profileSnapshot.val().teamId}`)
-        .on('value', taskListSnapshot => {
+        .once('value', taskListSnapshot => {
+          taskList = [];
           if (profileSnapshot.val().teamAdmin === true){
             taskListSnapshot.forEach( taskListSnap => {
               taskList.push({
@@ -64,6 +65,14 @@ export class TaskData {
           });
         });
       });
+  }
+
+  completeTask(taskId): any {
+    return firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/`)
+    .once('value', profileSnapshot => {
+      return firebase.database().ref(`/taskByTeam/${profileSnapshot.val().teamId}/${taskId}/completed`)
+        .set(true);
+    });
   }
 
 }

@@ -3,19 +3,17 @@ import firebase from 'firebase';
 
 @Injectable()
 export class AuthData {
-  public userProfile: firebase.database.Reference;
-  public teamProfile: firebase.database.Reference;
   public inviteRef: firebase.database.Reference;
 
   constructor() {
     this.inviteRef = firebase.database().ref('/invite');
-    this.userProfile = firebase.database().ref('/userProfile');
-    this.teamProfile = firebase.database().ref('/teamProfile');
   }
 
-  createAdminAccount(email: string, password: string, fullName: string, teamName: string): firebase.Promise<any> {
-    return firebase.auth().createUserWithEmailAndPassword(email, password).then( newUser => {
-      this.userProfile.child(newUser.uid)
+  createAdminAccount(email: string, password: string, fullName: string, 
+    teamName: string): firebase.Promise<any> {
+    return firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then( newUser => {
+      firebase.database().ref('/userProfile').child(newUser.uid)
         .set({
           email,
           fullName,
@@ -23,7 +21,7 @@ export class AuthData {
           teamName,
           teamAdmin: true
         }).then( () => {
-          this.teamProfile.child(newUser.uid).set({
+          firebase.database().ref('/teamProfile').child(newUser.uid).set({
             teamName,
             teamAdmin: newUser.uid,
             teamMembers: {
@@ -40,7 +38,7 @@ export class AuthData {
   createMemberAccount(email: string, password: string, teamId: string, fullName: string, 
     teamName: string, inviteId: string): firebase.Promise<any> {
     return firebase.auth().createUserWithEmailAndPassword(email, password).then( newUser => {
-      this.userProfile.child(newUser.uid)
+      firebase.database().ref('/userProfile').child(newUser.uid)
         .set({
           email,
           fullName,
@@ -49,7 +47,7 @@ export class AuthData {
           teamAdmin: false,
           active: false
         }).then( () => {
-          this.teamProfile.child(teamId).child('teamMembers').child(newUser.uid).set({
+          firebase.database().ref('/teamProfile').child(teamId).child('teamMembers').child(newUser.uid).set({
             fullName: fullName,
             email: email,
             inactive: true,
@@ -102,7 +100,6 @@ export class AuthData {
           }); 
       });
     });
-    
   }
 
   logoutUser(): firebase.Promise<any> {
