@@ -14,3 +14,5 @@ The app goes over:
 This app is showcased and explained step by step in me [Ionic and Firebase Book](https://javebratt.com/ionic-firebase-book).
 
 If you're just getting started I created a free Ionic and Firebase Crash Course, you can [check it out here](https://javebratt.com/signup/?ref=ProjectPlannerGithubRepo).
+
+If you have any questions you can ping me at [@javebratt](https://twitter.com/javebratt)
