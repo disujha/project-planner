@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 
 import { TeamData } from '../../providers/team-data';
-import { AuthData } from '../../providers/auth-data';
 
 @Component({
   selector: 'page-team',
@@ -13,8 +12,7 @@ export class TeamPage {
   pendingInvitationList: any;
   pendingRequestList: any;
 
-  constructor(public navCtrl: NavController, public teamData: TeamData, public alertCtrl: AlertController, 
-    public authData: AuthData) {
+  constructor(public navCtrl: NavController, public teamData: TeamData, public alertCtrl: AlertController) {
     this.getTeamProfile();
     this.getPendingInvitationList();
     this.getPendingRequestList();
@@ -45,7 +43,7 @@ export class TeamPage {
   }
 
   getPendingInvitationList(){
-    this.teamData.getPendingInvitation().then( pendingInvitationList => {
+    this.teamData.getPendingInvitationList().then( pendingInvitationList => {
       this.pendingInvitationList = pendingInvitationList;
     });
   }
@@ -88,7 +86,7 @@ export class TeamPage {
         {
           text: 'Save',
           handler: data => {
-            this.authData.inviteTeamMember(data.email, data.name, this.teamProfile.teamId, 
+            this.teamData.inviteTeamMember(data.email, data.name, this.teamProfile.teamId, 
               this.teamProfile.teamName).then( () => { this.getPendingInvitationList(); });
           }
         }
@@ -98,4 +96,3 @@ export class TeamPage {
   }
 
 }
- 

@@ -26,8 +26,6 @@
     <ion-item *ngFor="let task of taskList" (click)="completeTask(task)" 
       [class.incomplete]="!task.completed" [class.completed]="task.completed">
       <h2>{{ task.taskName }}</h2>
-      <h3>Assigned to: {{ task.memberName }}</h3>
-      <p>You can reach out at {{ task.memberEmail }}</p>
     </ion-item>
   </ion-list>
 </ion-content>

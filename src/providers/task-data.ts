@@ -67,12 +67,8 @@ export class TaskData {
       });
   }
 
-  completeTask(taskId): any {
-    return firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/`)
-    .once('value', profileSnapshot => {
-      return firebase.database().ref(`/taskByTeam/${profileSnapshot.val().teamId}/${taskId}/completed`)
-        .set(true);
-    });
+  completeTask(taskId): firebase.Promise<any> {
+    return this.taskRef.child(taskId).child('completed').set(true);
   }
 
 }

@@ -3,16 +3,10 @@ import firebase from 'firebase';
 
 @Injectable()
 export class TeamData {
-  public teamProfileRef: firebase.database.Reference;
-  public inviteRef: firebase.database.Reference;
   public rootRef: firebase.database.Reference;
-  public userProfile: firebase.database.Reference;
 
   constructor() {
-    this.teamProfileRef = firebase.database().ref(`/teamProfile/${firebase.auth().currentUser.uid}/`);
-    this.inviteRef = firebase.database().ref('/invite');
     this.rootRef = firebase.database().ref('/');
-    this.userProfile = firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/`);
   }
 
   acceptTeamMember(memberId: string, inviteId: string): firebase.Promise<any> {
@@ -29,7 +23,8 @@ export class TeamData {
 
   getAdminStatus(): Promise<any> {
     return new Promise( (resolve, reject) => {
-      this.userProfile.child('teamAdmin').on('value', adminStatus => {
+       firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/`)
+       .child('teamAdmin').on('value', adminStatus => {
         resolve(adminStatus.val());
       });
     });
@@ -37,17 +32,18 @@ export class TeamData {
 
   getUserProfile(): Promise<any> {
     return new Promise( (resolve, reject) => {
-      this.userProfile.on('value', profileSnapshot => {
+       firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/`)
+       .on('value', profileSnapshot => {
         resolve(profileSnapshot.val());
       });
     });
   }
 
-  getPendingInvitation(): Promise<any> {
+  getPendingInvitationList(): Promise<any> {
     const invitationList: Array<any> = [];
     return new Promise( (resolve, reject) => {
-      this.inviteRef.orderByChild('teamId').equalTo(firebase.auth().currentUser.uid)
-      .once('value', inviteSnapshot => {
+      firebase.database().ref('/invite').orderByChild('teamId')
+      .equalTo(firebase.auth().currentUser.uid).once('value', inviteSnapshot => {
         inviteSnapshot.forEach( snap => {
           if (!snap.val().acceptedInvite){
             invitationList.push({
@@ -69,7 +65,8 @@ export class TeamData {
   getPendingRequestList(): Promise<any> {
     const requestList: Array<any> = [];
     return new Promise( (resolve, reject) => {
-      this.teamProfileRef.child('teamMembers').orderByChild('inactive').equalTo(true)
+      firebase.database().ref(`/teamProfile/${firebase.auth().currentUser.uid}/`)
+      .child('teamMembers').orderByChild('inactive').equalTo(true)
       .once('value', requestListSnapshot => {
         requestListSnapshot.forEach( snap => {
           requestList.push({
@@ -88,7 +85,8 @@ export class TeamData {
   getTeamMemberList(): Promise<any> {
     const teamMeberList: Array<Object> = [];
     return new Promise( (resolve, reject) => {
-      this.teamProfileRef.child('teamMembers').on('value', teamMemberListSnapshot => {
+      firebase.database().ref(`/teamProfile/${firebase.auth().currentUser.uid}/`)
+      .child('teamMembers').on('value', teamMemberListSnapshot => {
         teamMemberListSnapshot.forEach( teamMemberListSnap => {
           if (teamMemberListSnap.key !== firebase.auth().currentUser.uid){
             teamMeberList.push({
@@ -107,13 +105,24 @@ export class TeamData {
   getTeamProfile(): Promise<any> {
     return new Promise( (resolve, reject) => {
       const teamProfile: any = {};
-      this.teamProfileRef.on('value', dataSnapshot => {
+      firebase.database().ref(`/teamProfile/${firebase.auth().currentUser.uid}/`)
+      .on('value', dataSnapshot => {
         teamProfile.teamId = dataSnapshot.key;
         teamProfile.teamName = dataSnapshot.val().teamName;
         teamProfile.adminName = dataSnapshot.val().teamMembers[dataSnapshot.val().teamAdmin].fullName;
         teamProfile.teamMembers = dataSnapshot.val().teamMembers;
         resolve(teamProfile);
       });
+    });
+  }
+
+  inviteTeamMember(email: string, fullName: string, teamId: string, teamName: string): firebase.Promise<any> {
+    return firebase.database().ref('/invite').push({
+      email,
+      fullName,
+      teamId, 
+      teamName,
+      acceptedInvite: false
     });
   }
 

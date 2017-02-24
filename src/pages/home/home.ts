@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { NavController, AlertController } from 'ionic-angular';
 import { TeamData } from '../../providers/team-data';
 import { TaskData } from '../../providers/task-data';

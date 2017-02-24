@@ -3,11 +3,8 @@ import firebase from 'firebase';
 
 @Injectable()
 export class AuthData {
-  public inviteRef: firebase.database.Reference;
 
-  constructor() {
-    this.inviteRef = firebase.database().ref('/invite');
-  }
+  constructor() {}
 
   createAdminAccount(email: string, password: string, fullName: string, 
     teamName: string): firebase.Promise<any> {
@@ -54,7 +51,7 @@ export class AuthData {
             inviteId: inviteId
           });
         }).then( () => {
-          this.inviteRef.child(inviteId).child('acceptedInvite').set(true);
+          firebase.database().ref('/invite').child(inviteId).child('acceptedInvite').set(true);
         });
     });
   }
@@ -62,7 +59,7 @@ export class AuthData {
   getTeamInvite(email: string): firebase.Promise<any> {
     return new Promise( (resolve, reject) => {
       const invitation: any = [];
-      this.inviteRef.orderByChild('email').equalTo(email).limitToFirst(1)
+      firebase.database().ref('/invite').orderByChild('email').equalTo(email).limitToFirst(1)
       .once('value', inviteSanpshot => {
         inviteSanpshot.forEach( inviteSnap => {
           invitation.push({
@@ -77,20 +74,8 @@ export class AuthData {
         resolve(invitation);
       });
     });
-    
   }
 
-  inviteTeamMember(email: string, fullName: string, teamId: string, teamName: string): firebase.Promise<any> {
-    return this.inviteRef.push({
-      email,
-      fullName,
-      teamId, 
-      teamName,
-      acceptedInvite: false
-    });
-  }
-
-  
   loginUser(email: string, password: string): Promise<any> {
     return new Promise( (resolve, reject) => {
       firebase.auth().signInWithEmailAndPassword(email, password).then( user => {
