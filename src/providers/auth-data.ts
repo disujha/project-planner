@@ -16,7 +16,8 @@ export class AuthData {
           fullName,
           teamId: newUser.uid,
           teamName,
-          teamAdmin: true
+          teamAdmin: true,
+          active: true
         }).then( () => {
           firebase.database().ref('/teamProfile').child(newUser.uid).set({
             teamName,
