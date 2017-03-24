@@ -17,6 +17,9 @@ import { AuthData } from '../providers/auth-data';
 import { TaskData } from '../providers/task-data';
 import { TeamData } from '../providers/team-data';
 
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+
 import { ObjectToArray } from './pipes/object-array';
 
 @NgModule({
@@ -55,7 +58,9 @@ import { ObjectToArray } from './pipes/object-array';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthData,
     TaskData,
-    TeamData
+    TeamData,
+    StatusBar,
+    SplashScreen
   ]
 })
 export class AppModule {}
