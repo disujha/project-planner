@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import firebase from 'firebase';
 
 @Injectable()
-export class TeamData {
+export class TeamProvider {
   public rootRef: firebase.database.Reference;
 
   constructor() {
@@ -116,7 +116,8 @@ export class TeamData {
     });
   }
 
-  inviteTeamMember(email: string, fullName: string, teamId: string, teamName: string): firebase.Promise<any> {
+  inviteTeamMember(email: string, fullName: string, teamId: string, 
+  teamName: string): firebase.Promise<any> {
     return firebase.database().ref('/invite').push({
       email,
       fullName,

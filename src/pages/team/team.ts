@@ -1,18 +1,22 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, AlertController } from 'ionic-angular';
+import { TeamProvider } from '../../providers/team/team';
 
-import { TeamData } from '../../providers/team-data';
 
+@IonicPage()
 @Component({
   selector: 'page-team',
   templateUrl: 'team.html',
 })
 export class TeamPage {
-  teamProfile: any;
-  pendingInvitationList: any;
-  pendingRequestList: any;
+  public teamProfile:any;
+  public pendingInvitationList:any;
+  public pendingRequestList:any;
 
-  constructor(public navCtrl: NavController, public teamData: TeamData, public alertCtrl: AlertController) {
+  constructor(public navCtrl:NavController, public alertCtrl:AlertController, 
+  public teamProvider:TeamProvider) {}
+
+  ionViewDidLoad() {
     this.getTeamProfile();
     this.getPendingInvitationList();
     this.getPendingRequestList();
@@ -32,7 +36,7 @@ export class TeamPage {
         {
           text: 'YES',
           handler: data => {
-            this.teamData.acceptTeamMember(memberId, inviteId).then( () => { 
+            this.teamProvider.acceptTeamMember(memberId, inviteId).then( () => { 
               this.getPendingRequestList(); 
             });
           }
@@ -43,19 +47,19 @@ export class TeamPage {
   }
 
   getPendingInvitationList(){
-    this.teamData.getPendingInvitationList().then( pendingInvitationList => {
+    this.teamProvider.getPendingInvitationList().then( pendingInvitationList => {
       this.pendingInvitationList = pendingInvitationList;
     });
   }
 
   getPendingRequestList(){
-    this.teamData.getPendingRequestList().then( pendingRequestList => {
+    this.teamProvider.getPendingRequestList().then( pendingRequestList => {
       this.pendingRequestList = pendingRequestList;
     });
   }
 
   getTeamProfile(){
-    this.teamData.getTeamProfile().then( teamProfileSnapshot => {
+    this.teamProvider.getTeamProfile().then( teamProfileSnapshot => {
       this.teamProfile = teamProfileSnapshot;
     });
   }
@@ -86,7 +90,7 @@ export class TeamPage {
         {
           text: 'Save',
           handler: data => {
-            this.teamData.inviteTeamMember(data.email, data.name, this.teamProfile.teamId, 
+            this.teamProvider.inviteTeamMember(data.email, data.name, this.teamProfile.teamId, 
               this.teamProfile.teamName).then( () => { this.getPendingInvitationList(); });
           }
         }

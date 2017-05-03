@@ -1,29 +1,29 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, Slides, LoadingController } from 'ionic-angular';
-import { FormBuilder, Validators } from '@angular/forms';
-import { AuthData } from '../../providers/auth-data';
+import { IonicPage, NavController, Slides, LoadingController } from 'ionic-angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthProvider } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
 
+@IonicPage()
 @Component({
   selector: 'page-intro',
-  templateUrl: 'intro.html'
+  templateUrl: 'intro.html',
 })
 export class IntroPage {
   @ViewChild(Slides) slides: Slides;
-  getInvitationForm: any;
-  signupForm: any;
-  invitation: any = null;
+  public getInvitationForm:FormGroup;
+  public signupForm:FormGroup;
+  public invitation:any = null;
 
-  constructor(public navCtrl: NavController, public authData: AuthData, public formBuilder: FormBuilder, 
-    public loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, 
+    public formBuilder: FormBuilder, public authProvider: AuthProvider) {
+      this.getInvitationForm = formBuilder.group({
+        email: ['', Validators.compose([Validators.required, EmailValidator.isValid])]
+      });
 
-    this.getInvitationForm = formBuilder.group({
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])]
-    });
-
-    this.signupForm = formBuilder.group({
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
-    });
+      this.signupForm = formBuilder.group({
+        password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+      });
   }
 
   nextSlide(): void {
@@ -35,7 +35,7 @@ export class IntroPage {
     if (!this.getInvitationForm.valid){
       console.log(this.getInvitationForm.value);
     } else {
-      this.authData.getTeamInvite(this.getInvitationForm.value.email)
+      this.authProvider.getTeamInvite(this.getInvitationForm.value.email)
         .then(inviteSnapshot => {
           if (inviteSnapshot){
             this.invitation = inviteSnapshot[0];
@@ -56,7 +56,7 @@ export class IntroPage {
     if (!this.signupForm.valid){
       console.log(this.signupForm.value);
     } else {
-      this.authData.createMemberAccount(this.invitation.email, this.signupForm.value.password, this.invitation.teamId, this.invitation.fullName, this.invitation.teamName, this.invitation.inviteId)
+      this.authProvider.createMemberAccount(this.invitation.email, this.signupForm.value.password, this.invitation.teamId, this.invitation.fullName, this.invitation.teamName, this.invitation.inviteId)
         .then( () => {
           loading.dismiss().then( () => {
             this.nextSlide();
@@ -67,4 +67,3 @@ export class IntroPage {
   }
 
 }
-

@@ -1,18 +1,26 @@
-# Light weight project management app
+This is a starter template for [Ionic](http://ionicframework.com/docs/) projects.
 
-The idea of this project is to push Ionic and Firebase to its limits testing role based authentication and an invite system without any server side code.
+## How to use this template
 
-The app goes over:
+*This template does not work on its own*. The shared files for each starter are found in the [ionic2-app-base repo](https://github.com/driftyco/ionic2-app-base).
 
-* Creating an admin account.
-* Having the admin invite other team members.
-* Team members accepting those invitations.
-* Admin approving accounts.
-* Admin ads taks to different team members.
-* People can only see what's assigned to them.
+To use this template, either create a new ionic project using the ionic node.js utility, or copy the files from this repository into the [Starter App Base](https://github.com/driftyco/ionic2-app-base).
 
-This app is showcased and explained step by step in me [Ionic and Firebase Book](https://javebratt.com/ionic-firebase-book).
+### With the Ionic CLI:
 
-If you're just getting started I created a free Ionic and Firebase Crash Course, you can [check it out here](https://javebratt.com/signup/?ref=ProjectPlannerGithubRepo).
+Take the name after `ionic2-starter-`, and that is the name of the template to be used when using the `ionic start` command below:
 
-If you have any questions you can ping me at [@javebratt](https://twitter.com/javebratt)
+```bash
+$ sudo npm install -g ionic cordova
+$ ionic start myTabs tabs
+```
+
+Then, to run it, cd into `myTabs` and run:
+
+```bash
+$ ionic platform add ios
+$ ionic run ios
+```
+
+Substitute ios for android if not on a Mac.
+

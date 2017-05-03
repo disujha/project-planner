@@ -1,37 +1,37 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
-import { TeamData } from '../../providers/team-data';
-import { TaskData } from '../../providers/task-data';
-import { TaskCreatePage } from '../task-create/task-create';
+import { IonicPage, NavController, AlertController } from 'ionic-angular';
+import { TeamProvider } from '../../providers/team/team';
+import { TaskProvider } from '../../providers/task/task';
 
+@IonicPage()
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
 })
 export class HomePage {
-  isAdmin: boolean = false;
-  taskList: Array<any> = [];
-  userProfile: Object = {};
+  public isAdmin: boolean = false;
+  public taskList: Array<any> = [];
+  public userProfile: Object = {};
 
-  constructor(public navCtrl: NavController, public taskData: TaskData, public teamData: TeamData, 
-    public alertCtrl: AlertController) {}
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, 
+  public teamProvider: TeamProvider, public taskProvider: TaskProvider) {}
 
   ionViewDidEnter(): void {
-    this.teamData.getAdminStatus().then( adminStatus => {
+    this.teamProvider.getAdminStatus().then( adminStatus => {
       this.isAdmin = adminStatus;
     });
 
-    this.taskData.getTaskList().then( taskList => {
+    this.taskProvider.getTaskList().then( taskList => {
       this.taskList = taskList;
     });
 
-    this.teamData.getUserProfile().then( profileSnapshot => {
+    this.teamProvider.getUserProfile().then( profileSnapshot => {
       this.userProfile = profileSnapshot;
     });
   }
 
   goToTaskCreate(): void {
-    this.navCtrl.push(TaskCreatePage);
+    this.navCtrl.push('TaskCreatePage');
   }
 
   completeTask(task): void {
@@ -42,7 +42,7 @@ export class HomePage {
         {
           text: 'OK',
           handler: () => { 
-            this.taskData.completeTask(task.taskId).then( () => {
+            this.taskProvider.completeTask(task.taskId).then( () => {
               task.completed = true;
             });
           }

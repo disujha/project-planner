@@ -1,28 +1,25 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 
-import { LoginPage } from '../login/login';
-import { SignupPage } from '../signup/signup';
-import { IntroPage } from '../intro/intro';
-
+@IonicPage()
 @Component({
   selector: 'page-landing',
-  templateUrl: 'landing.html'
+  templateUrl: 'landing.html',
 })
 export class LandingPage {
 
   constructor(public navCtrl: NavController) {}
 
   goToLogin(): void {
-    this.navCtrl.push(LoginPage);
+    this.navCtrl.push('LoginPage');
   }
 
   goToSignup(): void {
-    this.navCtrl.push(SignupPage);
+    this.navCtrl.push('SignupPage');
   }
   
   goToIntro(): void {
-    this.navCtrl.push(IntroPage);
+    this.navCtrl.push('IntroPage');
   }
 
 }

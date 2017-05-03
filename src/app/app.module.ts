@@ -1,42 +1,20 @@
 import { NgModule, ErrorHandler } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { TeamPage } from '../pages/team/team';
-import { HomePage } from '../pages/home/home';
-import { LandingPage } from '../pages/landing/landing';
-import { TabsPage } from '../pages/tabs/tabs';
-import { LoginPage } from '../pages/login/login';
-import { ResetPasswordPage } from '../pages/reset-password/reset-password';
-import { SignupPage } from '../pages/signup/signup';
-import { IntroPage } from '../pages/intro/intro';
-import { WaitingPage } from '../pages/waiting/waiting';
-import { TaskCreatePage } from '../pages/task-create/task-create';
-
-import { AuthData } from '../providers/auth-data';
-import { TaskData } from '../providers/task-data';
-import { TeamData } from '../providers/team-data';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { AuthProvider } from '../providers/auth/auth';
+import { TaskProvider } from '../providers/task/task';
+import { TeamProvider } from '../providers/team/team';
 
-import { ObjectToArray } from './pipes/object-array';
+/*import { ObjectToArray } from './pipes/object-array';*/
 
 @NgModule({
   declarations: [
-    MyApp,
-    TeamPage,
-    TaskCreatePage,
-    HomePage,
-    TabsPage,
-    LoginPage,
-    ResetPasswordPage,
-    SignupPage,
-    LandingPage,
-    IntroPage,
-    WaitingPage,
-    ObjectToArray
+    MyApp/*,
+    ObjectToArray*/
   ],
   imports: [
     BrowserModule,
@@ -44,25 +22,15 @@ import { ObjectToArray } from './pipes/object-array';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    TeamPage,
-    TaskCreatePage,
-    HomePage,
-    TabsPage,
-    LoginPage,
-    ResetPasswordPage,
-    SignupPage,
-    LandingPage,
-    IntroPage,
-    WaitingPage
+    MyApp
   ],
   providers: [
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthData,
-    TaskData,
-    TeamData,
     StatusBar,
-    SplashScreen
+    SplashScreen,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    AuthProvider,
+    TaskProvider,
+    TeamProvider
   ]
 })
 export class AppModule {}

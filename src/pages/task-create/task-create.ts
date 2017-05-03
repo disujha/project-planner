@@ -1,31 +1,28 @@
 import { Component } from '@angular/core';
-import { NavController, LoadingController } from 'ionic-angular';
-import { FormBuilder, Validators } from '@angular/forms';
+import { IonicPage, NavController, LoadingController } from 'ionic-angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TeamProvider } from '../../providers/team/team';
+import { TaskProvider } from '../../providers/task/task';
 
-import { TeamData } from '../../providers/team-data';
-import { TaskData } from '../../providers/task-data';
-
-
+@IonicPage()
 @Component({
   selector: 'page-task-create',
-  templateUrl: 'task-create.html'
+  templateUrl: 'task-create.html',
 })
 export class TaskCreatePage {
-  memberList: Array<Object>;
-  createTaskForm: any;
-
-  constructor(public navCtrl: NavController, public teamData: TeamData, public taskData: TaskData, 
-    public formBuilder: FormBuilder, public loadingCtrl: LoadingController) {
-
-      this.createTaskForm = formBuilder.group({
+  public memberList:Array<Object>;
+  public createTaskForm:FormGroup;
+  constructor(public navCtrl: NavController, public loadingCtrl:LoadingController, 
+  public formBuilder:FormBuilder, public teamProvider:TeamProvider, 
+  public taskProvider:TaskProvider) {
+    this.createTaskForm = formBuilder.group({
         taskName: ['', Validators.required],
         teamMember: ['', Validators.required],
       });
     
-    this.teamData.getTeamMemberList().then( teamList => {
+    this.teamProvider.getTeamMemberList().then( teamList => {
       this.memberList = teamList;
     });
-
   }
 
   createTask(){
@@ -33,7 +30,8 @@ export class TaskCreatePage {
     if (!this.createTaskForm.valid){
       console.log(this.createTaskForm.value);
     } else {
-      this.taskData.createTask(this.createTaskForm.value.taskName, this.createTaskForm.value.teamMember)
+      this.taskProvider.createTask(this.createTaskForm.value.taskName, 
+      this.createTaskForm.value.teamMember)
       .then( () => {
         loading.dismiss().then( () => {
           this.navCtrl.pop();
@@ -42,6 +40,5 @@ export class TaskCreatePage {
     }
     loading.present();
   }
-
 
 }

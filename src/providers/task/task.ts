@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import firebase from 'firebase';
 
 @Injectable()
-export class TaskData {
+export class TaskProvider {
   public taskRef: firebase.database.Reference;
   public userId: string;
   

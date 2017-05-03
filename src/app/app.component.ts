@@ -3,22 +3,17 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { TabsPage } from '../pages/tabs/tabs';
-import { LandingPage } from '../pages/landing/landing';
-import { WaitingPage } from '../pages/waiting/waiting';
-
 import firebase from 'firebase';
-
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any;
-  zone: NgZone;
-
-  constructor(platform: Platform, private statusBar: StatusBar, private splashScreen: SplashScreen) {
+  rootPage:string;
+  zone:NgZone;
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     this.zone = new NgZone({});
+    
     firebase.initializeApp({
       apiKey: "AIzaSyADnnJGaIckHIPvCs-kz8sYlqtTwf6BEsE",
       authDomain: "my-project-planner.firebaseapp.com",
@@ -30,22 +25,21 @@ export class MyApp {
     const unsubscribe = firebase.auth().onAuthStateChanged( user => {
       this.zone.run( () => {
         if (!user) {
-          this.rootPage = LandingPage;
+          this.rootPage = 'LandingPage';
           unsubscribe();
         } else {
           firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}`)
           .once('value', userProfile => {
             if (userProfile.val().active === true){
-              this.rootPage = TabsPage;
+              this.rootPage = 'TabsPage';
             } else {
-              this.rootPage = WaitingPage;
+              this.rootPage = 'WaitingPage';
             }
           }); 
           unsubscribe();
         }
       });     
     });
-
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
