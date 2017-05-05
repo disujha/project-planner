@@ -12,6 +12,7 @@ import { TaskProvider } from '../../providers/task/task';
 export class TaskCreatePage {
   public memberList:Array<Object>;
   public createTaskForm:FormGroup;
+  
   constructor(public navCtrl: NavController, public loadingCtrl:LoadingController, 
   public formBuilder:FormBuilder, public teamProvider:TeamProvider, 
   public taskProvider:TaskProvider) {
