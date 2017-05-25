@@ -13,6 +13,7 @@ export class LoginPage {
   public loginForm:FormGroup;
   constructor(public navCtrl:NavController, public loadingCtrl:LoadingController, 
     public formBuilder:FormBuilder, public authProvider:AuthProvider) {
+      
       this.loginForm = formBuilder.group({
         email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
         password: ['', Validators.compose([Validators.minLength(6), Validators.required])]

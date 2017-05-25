@@ -21,6 +21,9 @@ export class TaskCreatePage {
         teamMember: ['', Validators.required],
       });
     
+  }
+
+  ionViewDidEnter(){
     this.teamProvider.getTeamMemberList().then( teamList => {
       this.memberList = teamList;
     });

@@ -25,7 +25,7 @@ export class TaskProvider {
     });
   }
 
-  getTaskList(): Promise <any> {
+  getTaskList(): Promise<any> {
     let taskList: Array<any> = [];
     return new Promise( (resolve, reject) => {
 

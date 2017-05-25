@@ -88,11 +88,11 @@ export class AuthProvider {
     });
   }
 
-  logoutUser(): firebase.Promise<any> {
+  logoutUser(): firebase.Promise<void> {
     return firebase.auth().signOut();
   }
 
-  resetPassword(email: string): firebase.Promise<any> {
+  resetPassword(email: string): firebase.Promise<void> {
     return firebase.auth().sendPasswordResetEmail(email);
   }
 

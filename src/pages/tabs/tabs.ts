@@ -12,7 +12,9 @@ export class TabsPage {
   tab2Root: any = 'TeamPage';
   isAdmin: boolean = false;
 
-  constructor(public teamProvider: TeamProvider) {
+  constructor(public teamProvider: TeamProvider) {}
+
+  ionViewDidEnter(){
     this.teamProvider.getAdminStatus().then( adminStatus => {
       this.isAdmin = adminStatus;
     });
