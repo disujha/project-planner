@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -10,9 +10,7 @@ import firebase from 'firebase';
 })
 export class MyApp {
   rootPage:string;
-  zone:NgZone;
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
-    this.zone = new NgZone({});
     
     firebase.initializeApp({
       apiKey: "AIzaSyADnnJGaIckHIPvCs-kz8sYlqtTwf6BEsE",
@@ -23,7 +21,6 @@ export class MyApp {
     });
 
     const unsubscribe = firebase.auth().onAuthStateChanged( user => {
-      this.zone.run( () => {
         if (!user) {
           this.rootPage = 'LandingPage';
           unsubscribe();
@@ -38,7 +35,6 @@ export class MyApp {
           }); 
           unsubscribe();
         }
-      });     
     });
 
     platform.ready().then(() => {
