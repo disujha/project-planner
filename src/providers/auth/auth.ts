@@ -30,6 +30,8 @@ export class AuthProvider {
             }
           });
         });
+    }, error => {
+      console.log(error);
     });
   }
 
@@ -45,7 +47,8 @@ export class AuthProvider {
           teamAdmin: false,
           active: false
         }).then( () => {
-          firebase.database().ref('/teamProfile').child(teamId).child('teamMembers').child(newUser.uid).set({
+          firebase.database().ref('/teamProfile').child(teamId).child('teamMembers')
+          .child(newUser.uid).set({
             fullName: fullName,
             email: email,
             inactive: true,

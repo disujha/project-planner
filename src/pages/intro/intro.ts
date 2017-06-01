@@ -61,6 +61,10 @@ export class IntroPage {
           loading.dismiss().then( () => {
             this.nextSlide();
           });
+      }, error => {
+        loading.dismiss().then( () => {
+          console.error(error);
+        });
       });
     }
     loading.present();

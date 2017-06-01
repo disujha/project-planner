@@ -16,7 +16,7 @@ export class TeamPage {
   constructor(public navCtrl:NavController, public alertCtrl:AlertController, 
   public teamProvider:TeamProvider) {}
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     this.getTeamProfile();
     this.getPendingInvitationList();
     this.getPendingRequestList();

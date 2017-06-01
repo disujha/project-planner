@@ -28,12 +28,12 @@ export class TaskProvider {
   getTaskList(): Promise<any> {
     let taskList: Array<any> = [];
     return new Promise( (resolve, reject) => {
-
       firebase.database().ref(`/userProfile/${firebase.auth().currentUser.uid}/`)
       .once('value', profileSnapshot => {
         
         firebase.database().ref(`/taskByTeam/${profileSnapshot.val().teamId}`)
         .once('value', taskListSnapshot => {
+          console.log("Inside the getTaskList() second Firebase call", taskListSnapshot.val());
           taskList = [];
           if (profileSnapshot.val().teamAdmin === true){
             taskListSnapshot.forEach( taskListSnap => {
@@ -61,7 +61,10 @@ export class TaskProvider {
               return false
             });
           }
+          console.log("Before resolving the taskList");
           resolve(taskList);
+          }, error => {
+            console.error(error);
           });
         });
       });

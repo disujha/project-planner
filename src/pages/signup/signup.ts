@@ -33,6 +33,10 @@ export class SignupPage {
           loading.dismiss().then( () => {
             this.navCtrl.setRoot('TabsPage');
           })
+        }, error => {
+          loading.dismiss().then( () => {
+            console.log(error);
+          })
         });
     }
     loading.present();
