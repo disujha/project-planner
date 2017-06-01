@@ -16,7 +16,7 @@ export class HomePage {
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, 
   public teamProvider: TeamProvider, public taskProvider: TaskProvider) {}
 
-  ionViewDidEnter(): void {
+  ionViewDidLoad(){
     this.teamProvider.getAdminStatus().then( adminStatus => {
       this.isAdmin = adminStatus;
     });
